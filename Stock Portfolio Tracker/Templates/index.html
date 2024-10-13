@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Portfolio Tracker</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FF6347; /* Tomato Red */
+            color: white;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Table Styles */
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: white;
+            color: black;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #B22222; /* Firebrick Red */
+            text-align: center;
+        }
+
+        th {
+            background-color: #C41E3A; /* Crimson Red */
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #FF7F7F; /* Light Red */
+        }
+
+        /* Form and Button Styles */
+        form {
+            margin: 10px 0;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            margin-right: 5px;
+            border: 1px solid #B22222;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #B22222;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #8B0000; /* Darker Red */
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Stock Portfolio</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Quantity</th>
+                <th>Purchase Price</th>
+                <th>Current Price</th>
+                <th>Profit/Loss</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.symbol }}</td>
+                <td>{{ stock.quantity }}</td>
+                <td>{{ stock.purchase_price }}</td>
+                <td>{{ stock.current_price if stock.current_price else 'N/A' }}</td>
+                <td>
+                    {% if stock.current_price %}
+                        {{ stock.current_price - stock.purchase_price }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="/remove_stock/{{ stock.id }}" method="POST">
+                        <button type="submit">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Add a New Stock</h2>
+    <form action="/add_stock" method="POST">
+        <input type="text" name="symbol" placeholder="Stock Symbol" required>
+        <input type="number" name="quantity" placeholder="Quantity" required>
+        <input type="text" name="purchase_price" placeholder="Purchase Price" required>
+        <button type="submit">Add Stock</button>
+    </form>
+</body>
+</html>
